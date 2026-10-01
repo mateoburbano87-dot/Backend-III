@@ -18,6 +18,11 @@ class UserRepository {
     return UserModel.create(data);
   }
 
+  // Lo uso en el seed de mocks
+  async createMany(docs) {
+    return UserModel.insertMany(docs);
+  }
+
   async updateById(id, data) {
     return UserModel.findByIdAndUpdate(id, data, { new: true }).select('-password');
   }
