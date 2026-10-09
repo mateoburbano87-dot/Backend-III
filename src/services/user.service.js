@@ -1,5 +1,7 @@
 import userRepository from '../repositories/user.repository.js';
 import { USER_ROLES } from '../constants/index.js';
+import { NotFoundError, ValidationError, ConflictError } from '../errors/index.js';
+import { ERROR_MESSAGES } from '../errors/errorDictionary.js';
 
 class UserService {
   async getAllUsers() {
@@ -9,23 +11,21 @@ class UserService {
   async getUserById(id) {
     const user = await userRepository.getById(id);
     if (!user) {
-      throw new Error('Usuario no encontrado');
+      throw new NotFoundError(ERROR_MESSAGES.USER_NOT_FOUND);
     }
     return user;
   }
 
   async createUser(data) {
     if (!data.name || !data.email) {
-      throw new Error('Nombre y email son obligatorios');
+      throw new ValidationError(ERROR_MESSAGES.USER_NAME_EMAIL_REQUIRED);
     }
 
-    // Me fijo que no exista otro usuario con el mismo email
     const existing = await userRepository.getByEmail(data.email);
     if (existing) {
-      throw new Error('Ya existe un usuario con ese email');
+      throw new ConflictError(ERROR_MESSAGES.USER_EMAIL_IN_USE);
     }
 
-    // Si no me pasan rol, le pongo USER por defecto usando la constante
     if (!data.role) {
       data.role = USER_ROLES.USER;
     }
@@ -36,7 +36,7 @@ class UserService {
   async updateUser(id, data) {
     const updated = await userRepository.updateById(id, data);
     if (!updated) {
-      throw new Error('Usuario no encontrado');
+      throw new NotFoundError(ERROR_MESSAGES.USER_NOT_FOUND);
     }
     return updated;
   }
@@ -44,7 +44,7 @@ class UserService {
   async deleteUser(id) {
     const deleted = await userRepository.deleteById(id);
     if (!deleted) {
-      throw new Error('Usuario no encontrado');
+      throw new NotFoundError(ERROR_MESSAGES.USER_NOT_FOUND);
     }
     return deleted;
   }
