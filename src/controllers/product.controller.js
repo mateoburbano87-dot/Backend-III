@@ -1,51 +1,33 @@
 import productService from '../services/product.service.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
 
-// El controller solo maneja req/res y llama al service. Nunca toca Mongoose.
+// El controller solo maneja req/res y llama al service.
+// Los errores se derivan automáticamente al middleware gracias a asyncHandler.
 class ProductController {
-  async getAll(req, res) {
-    try {
-      const products = await productService.getAllProducts();
-      res.status(200).json(products);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  }
+  getAll = asyncHandler(async (req, res) => {
+    const products = await productService.getAllProducts();
+    res.status(200).json(products);
+  });
 
-  async getById(req, res) {
-    try {
-      const product = await productService.getProductById(req.params.id);
-      res.status(200).json(product);
-    } catch (error) {
-      res.status(404).json({ message: error.message });
-    }
-  }
+  getById = asyncHandler(async (req, res) => {
+    const product = await productService.getProductById(req.params.id);
+    res.status(200).json(product);
+  });
 
-  async create(req, res) {
-    try {
-      const product = await productService.createProduct(req.body);
-      res.status(201).json(product);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  }
+  create = asyncHandler(async (req, res) => {
+    const product = await productService.createProduct(req.body);
+    res.status(201).json(product);
+  });
 
-  async update(req, res) {
-    try {
-      const product = await productService.updateProduct(req.params.id, req.body);
-      res.status(200).json(product);
-    } catch (error) {
-      res.status(404).json({ message: error.message });
-    }
-  }
+  update = asyncHandler(async (req, res) => {
+    const product = await productService.updateProduct(req.params.id, req.body);
+    res.status(200).json(product);
+  });
 
-  async delete(req, res) {
-    try {
-      await productService.deleteProduct(req.params.id);
-      res.status(204).send();
-    } catch (error) {
-      res.status(404).json({ message: error.message });
-    }
-  }
+  delete = asyncHandler(async (req, res) => {
+    await productService.deleteProduct(req.params.id);
+    res.status(204).send();
+  });
 }
 
 export default new ProductController();
