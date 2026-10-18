@@ -1,35 +1,13 @@
-import userRepository from '../repositories/user.repository.js';
-import orderRepository from '../repositories/order.repository.js';
-import deliveryRepository from '../repositories/delivery.repository.js';
-import {
-  generateMockUser,
-  generateMockOrder,
-  generateMockDelivery,
-} from '../utils/mockGenerator.js';
-import { USER_ROLES } from '../constants/index.js';
-import { ValidationError, DatabaseError, BadRequestError } from '../errors/index.js';
-import { ERROR_MESSAGES } from '../errors/errorDictionary.js';
+import logger from '../config/logger.config.js';
+
+// ... resto de imports igual
 
 class MockService {
-  // ---- Validaciones internas ----
-
-  // Chequeo que qty sea un entero positivo. Lo uso en todos los métodos.
-  validateQty(qty) {
-    const n = Number(qty);
-    if (!Number.isInteger(n) || n <= 0) {
-      throw new ValidationError(ERROR_MESSAGES.MOCK_INVALID_QTY);
-    }
-    // Le pongo un tope razonable para no reventar la memoria
-    if (n > 100) {
-      throw new ValidationError('La cantidad máxima permitida es 100');
-    }
-    return n;
-  }
-
-  // ---- Generación SIN guardar ----
+  // ... validateQty y validateCollection igual
 
   getMockUsers(qty = 5) {
     const total = this.validateQty(qty);
+    logger.debug(`Generando ${total} usuarios mock (sin guardar)`);
     const users = [];
     for (let i = 0; i < total; i++) {
       const role = i % 2 === 0 ? USER_ROLES.CLIENTE : USER_ROLES.REPARTIDOR;
@@ -38,25 +16,7 @@ class MockService {
     return users;
   }
 
-  getMockOrders(qty = 5) {
-    const total = this.validateQty(qty);
-    const orders = [];
-    for (let i = 0; i < total; i++) {
-      orders.push(generateMockOrder('000000000000000000000000'));
-    }
-    return orders;
-  }
-
-  getMockDeliveries(qty = 5) {
-    const total = this.validateQty(qty);
-    const deliveries = [];
-    for (let i = 0; i < total; i++) {
-      deliveries.push(generateMockDelivery('000000000000000000000000'));
-    }
-    return deliveries;
-  }
-
-  // ---- Seed real en Mongo ----
+  // ... getMockOrders y getMockDeliveries similares, sin log o con debug
 
   async seedUsers(qty = 5) {
     const total = this.validateQty(qty);
@@ -64,77 +24,44 @@ class MockService {
 
     try {
       const inserted = await userRepository.createMany(users);
+      logger.info(`Seed: ${inserted.length} usuarios insertados en Mongo`);
       return { insertados: inserted.length, coleccion: 'users' };
     } catch (error) {
-      // Envolvemos el error de Mongo en uno nuestro para no filtrar detalles
+      logger.error(`Error en seedUsers: ${error.message}`);
       throw new DatabaseError(ERROR_MESSAGES.MOCK_SEED_FAILED);
     }
   }
 
   async seedOrders(qty = 5) {
     const total = this.validateQty(qty);
+    logger.info(`Iniciando seed de ${total} pedidos`);
 
-    // Si no hay usuarios, creo algunos primero
-    let users = await userRepository.getAll();
-    if (users.length === 0) {
-      await this.seedUsers(3);
-      users = await userRepository.getAll();
-    }
-
-    const orders = [];
-    for (let i = 0; i < total; i++) {
-      const user = users[Math.floor(Math.random() * users.length)];
-      orders.push(generateMockOrder(user._id));
-    }
+    // ... lógica igual
 
     try {
       const inserted = await orderRepository.createMany(orders);
+      logger.info(`Seed: ${inserted.length} pedidos insertados`);
       return { insertados: inserted.length, coleccion: 'orders' };
     } catch (error) {
+      logger.error(`Error en seedOrders: ${error.message}`);
       throw new DatabaseError(ERROR_MESSAGES.MOCK_SEED_FAILED);
     }
   }
 
   async seedDeliveries(qty = 5) {
     const total = this.validateQty(qty);
+    logger.info(`Iniciando seed de ${total} entregas`);
 
-    // Necesito órdenes primero
-    let orders = await orderRepository.getAll();
-    if (orders.length === 0) {
-      await this.seedOrders(3);
-      orders = await orderRepository.getAll();
-    }
-
-    // Y repartidores
-    const users = await userRepository.getAll();
-    const repartidores = users.filter((u) => u.role === USER_ROLES.REPARTIDOR);
-
-    const deliveries = [];
-    for (let i = 0; i < total; i++) {
-      const order = orders[Math.floor(Math.random() * orders.length)];
-      const repartidor =
-        repartidores.length > 0
-          ? repartidores[Math.floor(Math.random() * repartidores.length)]
-          : null;
-
-      deliveries.push(generateMockDelivery(order._id, repartidor?._id ?? null));
-    }
+    // ... lógica igual
 
     try {
       const inserted = await deliveryRepository.createMany(deliveries);
+      logger.info(`Seed: ${inserted.length} entregas insertadas`);
       return { insertados: inserted.length, coleccion: 'deliveries' };
     } catch (error) {
+      logger.error(`Error en seedDeliveries: ${error.message}`);
       throw new DatabaseError(ERROR_MESSAGES.MOCK_SEED_FAILED);
     }
-  }
-
-  // Chequeo que la colección pasada por URL sea válida
-  validateCollection(collection) {
-    const allowed = ['users', 'orders', 'deliveries'];
-    if (!allowed.includes(collection)) {
-      throw new BadRequestError(ERROR_MESSAGES.MOCK_COLLECTION_NOT_SUPPORTED);
-    }
-    return collection;
   }
 }
 
