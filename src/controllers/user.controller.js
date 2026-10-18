@@ -1,5 +1,6 @@
 import userService from '../services/user.service.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+import { validateObjectId, requireFields } from '../utils/validators.js';
 
 class UserController {
   getAll = asyncHandler(async (req, res) => {
@@ -8,21 +9,25 @@ class UserController {
   });
 
   getById = asyncHandler(async (req, res) => {
+    validateObjectId(req.params.id);
     const user = await userService.getUserById(req.params.id);
     res.status(200).json(user);
   });
 
   create = asyncHandler(async (req, res) => {
+    requireFields(req.body, ['name', 'email']);
     const user = await userService.createUser(req.body);
     res.status(201).json(user);
   });
 
   update = asyncHandler(async (req, res) => {
+    validateObjectId(req.params.id);
     const user = await userService.updateUser(req.params.id, req.body);
     res.status(200).json(user);
   });
 
   delete = asyncHandler(async (req, res) => {
+    validateObjectId(req.params.id);
     await userService.deleteUser(req.params.id);
     res.status(204).send();
   });
