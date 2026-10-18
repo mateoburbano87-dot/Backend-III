@@ -1,16 +1,25 @@
 {
   "name": "shipnow",
   "version": "1.0.0",
-  "description": "API de ShipNow refactorizada por capas",
+  "description": "API de ShipNow con arquitectura por capas, mocks, errores centralizados y logging",
   "main": "src/server.js",
   "type": "module",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "node --watch src/server.js"
+    "dev": "node --watch src/server.js",
+    "test": "node --test tests/",
+    "lint": "eslint src/ tests/",
+    "lint:fix": "eslint src/ tests/ --fix"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "mongoose": "^8.4.0"
+    "mongoose": "^8.4.0",
+    "winston": "^3.13.0",
+    "winston-daily-rotate-file": "^5.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.5.0",
+    "supertest": "^7.0.0"
   }
 }
