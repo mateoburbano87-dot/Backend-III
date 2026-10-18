@@ -1,13 +1,13 @@
 import { AppError } from '../errors/index.js';
 import { ERROR_MESSAGES } from '../errors/errorDictionary.js';
 import env from '../config/env.config.js';
+import logger from '../config/logger.config.js';
 
-// Middleware global: TODOS los errores terminan acá.
-// Express lo reconoce como middleware de error porque tiene 4 parámetros.
 // eslint-disable-next-line no-unused-vars
 export const errorHandler = (err, req, res, next) => {
-  // Si el error es de nuestro dominio, responde con su status y code
+  // Errores controlados: los logueo como warning (no son fallas del server)
   if (err instanceof AppError) {
+    logger.warning(`${req.method} ${req.originalUrl} - ${err.code}: ${err.message}`);
     return res.status(err.statusCode).json({
       success: false,
       error: {
@@ -17,8 +17,9 @@ export const errorHandler = (err, req, res, next) => {
     });
   }
 
-  // Si no lo reconozco, es un error inesperado.
-  // En desarrollo muestro el mensaje real, en producción uno genérico.
+  // Errores inesperados: sí son problema del server
+  logger.error(`${req.method} ${req.originalUrl} - ${err.message}`);
+
   const message =
     env.nodeEnv === 'development' ? err.message : ERROR_MESSAGES.INTERNAL_ERROR;
 
