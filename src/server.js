@@ -1,18 +1,20 @@
 import mongoose from 'mongoose';
 import app from './app.js';
 import env from './config/env.config.js';
+import logger from './config/logger.config.js';
 
-// Me conecto a Mongo primero y recién después levanto el server
 const startServer = async () => {
   try {
     await mongoose.connect(env.mongoUri);
-    console.log('Conectado a MongoDB');
+    logger.info('Conexión a MongoDB establecida');
 
     app.listen(env.port, () => {
-      console.log(`Servidor corriendo en puerto ${env.port} (${env.nodeEnv})`);
+      logger.info(`Servidor ShipNow escuchando en el puerto ${env.port}`);
+      logger.debug(`Entorno: ${env.nodeEnv}`);
     });
   } catch (error) {
-    console.error('Error al iniciar la app:', error.message);
+    // Si no puedo conectar a Mongo, es una falla crítica
+    logger.fatal(`Error al iniciar la app: ${error.message}`);
     process.exit(1);
   }
 };
