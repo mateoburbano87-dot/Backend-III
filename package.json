@@ -1,13 +1,13 @@
 {
   "name": "shipnow",
   "version": "1.0.0",
-  "description": "API de ShipNow con arquitectura por capas, mocks, errores centralizados y logging",
+  "description": "API de ShipNow con arquitectura por capas, mocks, errores centralizados, logging y Swagger",
   "main": "src/server.js",
   "type": "module",
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "test": "node --test tests/",
+    "test": "node --test tests/*.test.js",
     "lint": "eslint src/ tests/",
     "lint:fix": "eslint src/ tests/ --fix"
   },
@@ -16,7 +16,9 @@
     "express": "^4.19.2",
     "mongoose": "^8.4.0",
     "winston": "^3.13.0",
-    "winston-daily-rotate-file": "^5.0.0"
+    "winston-daily-rotate-file": "^5.0.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "eslint": "^9.5.0",
