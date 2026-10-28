@@ -3,7 +3,8 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 
 class LoggerController {
   // GET /api/logger-test
-  // Dispara un log de cada nivel para verificar la configuración
+  // Endpoint de prueba (NO es funcionalidad de negocio).
+  // Dispara un log de cada nivel para verificar la config de Winston.
   test = asyncHandler(async (req, res) => {
     logger.debug('Log de prueba: nivel debug');
     logger.http('Log de prueba: nivel http');
