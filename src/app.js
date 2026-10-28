@@ -1,8 +1,10 @@
 import express from 'express';
+import swaggerUi from 'swagger-ui-express';
 import productRoutes from './routes/product.routes.js';
 import userRoutes from './routes/user.routes.js';
 import mockRoutes from './routes/mock.routes.js';
 import loggerRoutes from './routes/logger.routes.js';
+import swaggerSpec from './config/swagger.config.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import logger from './config/logger.config.js';
@@ -11,7 +13,6 @@ const app = express();
 
 app.use(express.json());
 
-// Logueo cada request como nivel http (una línea por request, sin body)
 app.use((req, res, next) => {
   logger.http(`${req.method} ${req.originalUrl}`);
   next();
@@ -20,6 +21,11 @@ app.use((req, res, next) => {
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
+
+// Swagger UI en /api/docs. La config vive en src/config/swagger.config.js
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// JSON crudo por si se quiere importar en Postman/Insomnia
+app.get('/api/docs.json', (req, res) => res.json(swaggerSpec));
 
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
