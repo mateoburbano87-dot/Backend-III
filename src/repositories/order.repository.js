@@ -13,9 +13,16 @@ class OrderRepository {
     return OrderModel.create(data);
   }
 
-  // Lo uso en el seed para insertar varios de una
   async createMany(docs) {
     return OrderModel.insertMany(docs);
+  }
+
+  async updateById(id, data) {
+    return OrderModel.findByIdAndUpdate(id, data, { new: true }).populate('user', '-password');
+  }
+
+  async deleteById(id) {
+    return OrderModel.findByIdAndDelete(id);
   }
 
   async deleteAll() {
