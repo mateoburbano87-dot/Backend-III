@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "node --watch src/server.js",
+    "dev": "node --watch-path=./src src/server.js",
     "test": "cross-env NODE_ENV=test mocha 'tests/**/*.test.js' --timeout 10000 --exit",
     "lint": "eslint src/ tests/",
     "lint:fix": "eslint src/ tests/ --fix"
@@ -27,7 +27,7 @@
     "mocha": "^10.6.0",
     "supertest": "^7.0.0"
   },
-  
+
   "overrides": {
     "serialize-javascript": "^7.0.4"
   }
