@@ -1,18 +1,19 @@
-import test from 'node:test';
-import assert from 'node:assert';
+import { expect } from 'chai';
 import request from 'supertest';
 import app from '../src/app.js';
 
-test('GET /api/logger-test devuelve 200 y lista los niveles', async () => {
-  const res = await request(app).get('/api/logger-test');
-  assert.strictEqual(res.status, 200);
-  assert.ok(Array.isArray(res.body.levels));
-  assert.deepStrictEqual(res.body.levels, [
-    'debug',
-    'http',
-    'info',
-    'warning',
-    'error',
-    'fatal',
-  ]);
+describe('Logger API', () => {
+  it('GET /api/logger-test devuelve 200 con la lista de niveles', async () => {
+    const res = await request(app).get('/api/logger-test');
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.keys('message', 'levels');
+    expect(res.body.levels).to.deep.equal([
+      'debug',
+      'http',
+      'info',
+      'warning',
+      'error',
+      'fatal',
+    ]);
+  });
 });
