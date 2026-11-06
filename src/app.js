@@ -4,6 +4,8 @@ import productRoutes from './routes/product.routes.js';
 import userRoutes from './routes/user.routes.js';
 import mockRoutes from './routes/mock.routes.js';
 import loggerRoutes from './routes/logger.routes.js';
+import orderRoutes from './routes/order.routes.js';
+import deliveryRoutes from './routes/delivery.routes.js';
 import swaggerSpec from './config/swagger.config.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
@@ -22,13 +24,13 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-// Swagger UI en /api/docs. La config vive en src/config/swagger.config.js
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-// JSON crudo por si se quiere importar en Postman/Insomnia
 app.get('/api/docs.json', (req, res) => res.json(swaggerSpec));
 
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/deliveries', deliveryRoutes);
 app.use('/api/mocks', mockRoutes);
 app.use('/api/logger-test', loggerRoutes);
 
