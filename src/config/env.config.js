@@ -1,20 +1,22 @@
 import dotenv from 'dotenv';
 
-dotenv.config();
+// Si estamos en test, cargo el .env.test. Si no, el .env normal.
+// Importante: NODE_ENV tiene que estar seteado ANTES de esta línea
+// (lo hace el script "test" en package.json con NODE_ENV=test mocha ...)
+const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
 
-// Lista de variables que la app necesita sí o sí para arrancar
+dotenv.config({ path: envFile });
+
 const REQUIRED_VARS = ['PORT', 'MONGODB_URI', 'NODE_ENV'];
 
-// Me fijo que ninguna falte antes de exportar nada
 const missing = REQUIRED_VARS.filter((key) => !process.env[key]);
 
 if (missing.length > 0) {
   throw new Error(
-    `Faltan variables de entorno obligatorias: ${missing.join(', ')}. Revisá tu archivo .env`
+    `Faltan variables de entorno obligatorias: ${missing.join(', ')}. Revisá tu archivo ${envFile}`
   );
 }
 
-// Exporto un objeto ya validado para no andar leyendo process.env en todos lados
 const env = {
   port: Number(process.env.PORT),
   mongoUri: process.env.MONGODB_URI,
