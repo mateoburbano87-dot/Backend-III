@@ -32,3 +32,10 @@ export const DELIVERY_STATUS = Object.freeze({
   ON_THE_WAY: 'ON_THE_WAY',
   DELIVERED: 'DELIVERED',
 });
+
+// Tipos de documento permitidos para usuarios
+export const DOCUMENT_TYPES = Object.freeze({
+  DNI: 'DNI',
+  LICENSE: 'LICENSE',
+  PASSPORT: 'PASSPORT',
+});

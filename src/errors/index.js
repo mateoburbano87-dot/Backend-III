@@ -33,4 +33,11 @@ export class DatabaseError extends AppError {
   }
 }
 
+// Error específico para problemas de archivos
+export class FileError extends AppError {
+  constructor(message = 'Error al procesar el archivo') {
+    super(message, 400, 'FILE_ERROR');
+  }
+}
+
 export { AppError };

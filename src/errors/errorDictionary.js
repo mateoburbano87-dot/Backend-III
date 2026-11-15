@@ -19,4 +19,12 @@ export const ERROR_MESSAGES = Object.freeze({
   // Genéricos
   INTERNAL_ERROR: 'Error interno del servidor',
   ROUTE_NOT_FOUND: 'Ruta no encontrada',
+
+  // Agrego al objeto ERROR_MESSAGES existente:
+  FILE_REQUIRED: 'El archivo es obligatorio',
+  FILE_TOO_LARGE: 'El archivo supera el tamaño máximo permitido (5 MB)',
+  FILE_TYPE_INVALID: 'Tipo de archivo no permitido. Solo PDF, JPG o PNG.',
+  DOCUMENT_TYPE_INVALID: 'Tipo de documento inválido',
+  FILE_SAVE_ERROR: 'Error al guardar el archivo en el servidor',
+  USER_NOT_FOUND: 'Usuario no encontrado', // ya existe, por si acaso
 });
