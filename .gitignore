@@ -1,7 +1,7 @@
 node_modules/
 .env
-.env.test
 *.log
 logs/
-.DS_Store
 coverage/
+uploads/          # <-- NUEVO: los archivos subidos no van al repo
+.DS_Store
