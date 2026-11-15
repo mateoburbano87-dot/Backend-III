@@ -10,6 +10,21 @@ const userSchema = new mongoose.Schema(
       enum: Object.values(USER_ROLES),
       default: USER_ROLES.USER,
     },
+    // Array de metadatos de documentos (no guardo el archivo, solo info)
+    documents: [
+      {
+        originalName: String,
+        filename: String,
+        path: String,
+        mimetype: String,
+        size: Number,
+        documentType: {
+          type: String,
+          enum: Object.values(DOCUMENT_TYPES),
+        },
+        uploadedAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -30,6 +30,15 @@ class UserRepository {
   async deleteById(id) {
     return UserModel.findByIdAndDelete(id);
   }
+
+  // Agrego este método para pushear un documento al array del usuario
+async addDocument(userId, documentMetadata) {
+  return UserModel.findByIdAndUpdate(
+    userId,
+    { $push: { documents: documentMetadata } },
+    { new: true }
+  ).select('-password');
+}
 }
 
 export default new UserRepository();
