@@ -1,38 +1,31 @@
 import express from 'express';
-import swaggerUi from 'swagger-ui-express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import productRoutes from './routes/product.routes.js';
 import userRoutes from './routes/user.routes.js';
 import mockRoutes from './routes/mock.routes.js';
-import loggerRoutes from './routes/logger.routes.js';
-import orderRoutes from './routes/order.routes.js';
-import deliveryRoutes from './routes/delivery.routes.js';
-import swaggerSpec from './config/swagger.config.js';
+import fileRoutes from './routes/file.routes.js'; // nuevo
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
-import logger from './config/logger.config.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
 app.use(express.json());
 
-app.use((req, res, next) => {
-  logger.http(`${req.method} ${req.originalUrl}`);
-  next();
-});
+// Sirvo los archivos subidos como estáticos (para poder verlos/descargarlos)
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.get('/api/docs.json', (req, res) => res.json(swaggerSpec));
-
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/deliveries', deliveryRoutes);
 app.use('/api/mocks', mockRoutes);
-app.use('/api/logger-test', loggerRoutes);
+app.use('/api/files', fileRoutes); // nuevo
 
 app.use(notFoundHandler);
 app.use(errorHandler);
