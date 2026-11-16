@@ -1,7 +1,7 @@
 {
   "name": "shipnow",
   "version": "1.0.0",
-  "description": "API de ShipNow con arquitectura por capas, mocks, errores centralizados, logging y carga de archivos",
+  "description": "API de ShipNow con arquitectura por capas, mocks, errores centralizados, logging, Swagger y carga de archivos",
   "main": "src/server.js",
   "type": "module",
   "scripts": {
@@ -17,6 +17,8 @@
     "express": "^4.19.2",
     "mongoose": "^8.4.0",
     "multer": "^1.4.5-lts.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "winston": "^3.13.0",
     "winston-daily-rotate-file": "^5.0.0"
   },
