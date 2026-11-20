@@ -1,7 +1,7 @@
 {
   "name": "shipnow",
   "version": "1.0.0",
-  "description": "API de ShipNow con arquitectura por capas, mocks, errores centralizados, logging, Swagger y carga de archivos",
+  "description": "API de ShipNow preparada para producción con Docker, Swagger y Tests",
   "main": "src/server.js",
   "type": "module",
   "scripts": {
