@@ -10,14 +10,14 @@ class OrderService {
   async getOrderById(id) {
     const order = await orderRepository.getById(id);
     if (!order) {
-      throw new NotFoundError('Orden no encontrada');
+      throw new NotFoundError(ERROR_MESSAGES.ORDER_NOT_FOUND);
     }
     return order;
   }
 
   async createOrder(data) {
     if (!data.user || !data.products) {
-      throw new ValidationError('Usuario y productos son obligatorios');
+      throw new ValidationError(ERROR_MESSAGES.ORDER_FIELDS_REQUIRED);
     }
     return orderRepository.create(data);
   }
@@ -25,7 +25,7 @@ class OrderService {
   async updateOrderStatus(id, status) {
     const updated = await orderRepository.updateStatus(id, status);
     if (!updated) {
-      throw new NotFoundError('Orden no encontrada');
+      throw new NotFoundError(ERROR_MESSAGES.ORDER_NOT_FOUND);
     }
     return updated;
   }
@@ -33,7 +33,7 @@ class OrderService {
   async deleteOrder(id) {
     const deleted = await orderRepository.deleteById(id);
     if (!deleted) {
-      throw new NotFoundError('Orden no encontrada');
+      throw new NotFoundError(ERROR_MESSAGES.ORDER_NOT_FOUND);
     }
     return deleted;
   }

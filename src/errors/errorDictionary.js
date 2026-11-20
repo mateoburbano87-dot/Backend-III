@@ -27,4 +27,6 @@ export const ERROR_MESSAGES = Object.freeze({
   DOCUMENT_TYPE_INVALID: 'Tipo de documento inválido',
   FILE_SAVE_ERROR: 'Error al guardar el archivo en el servidor',
   USER_NOT_FOUND: 'Usuario no encontrado', // ya existe, por si acaso
+    ORDER_NOT_FOUND: 'Orden no encontrada',
+  ORDER_FIELDS_REQUIRED: 'Usuario y productos son obligatorios',
 });
