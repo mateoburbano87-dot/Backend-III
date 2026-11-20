@@ -1,5 +1,5 @@
 import express from 'express';
-import path from 'path';
+// Línea 2 borrada: import path from 'path';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec, shouldMountSwagger } from './config/swagger.config.js';
 import { UPLOADS_DIR } from './config/constants.config.js';

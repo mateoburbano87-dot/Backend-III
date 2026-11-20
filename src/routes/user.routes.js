@@ -1,9 +1,12 @@
-// En src/controllers/order.controller.js (o user)
-  getAll = asyncHandler(async (req, res) => {
-    const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 20;
-    
-    // Asumiendo que el service tiene un método con skip y limit
-    const orders = await orderService.getAllOrders(page, limit);
-    res.status(200).json(orders);
-  });
+import { Router } from 'express';
+import userController from '../controllers/user.controller.js';
+
+const router = Router();
+
+router.get('/', userController.getAll);
+router.get('/:id', userController.getById);
+router.post('/', userController.create);
+router.put('/:id', userController.update);
+router.delete('/:id', userController.delete);
+
+export default router;
