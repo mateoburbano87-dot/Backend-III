@@ -18,6 +18,7 @@ class FileService {
       throw new ValidationError(ERROR_MESSAGES.DOCUMENT_TYPE_INVALID);
     }
 
+    // Metadatos completos garantizados
     const metadata = {
       originalName: file.originalname,
       filename: file.filename,

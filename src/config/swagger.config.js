@@ -1,17 +1,18 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import env from './env.config.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const options = {
   definition: {
-    openapi: '3.0.0',
+    openapi: '3.0.3', // <-- Corregido a 3.0.3
     info: {
       title: 'ShipNow API',
       version: '1.0.0',
-      description: 'API de logística con arquitectura por capas, mocks, errores centralizados y carga de archivos',
+      description: 'API de logística preparada para producción',
     },
     servers: [{ url: 'http://localhost:3000' }],
     components: {
@@ -23,21 +24,6 @@ const options = {
             name: { type: 'string' },
             email: { type: 'string' },
             role: { type: 'string' },
-            documents: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  originalName: { type: 'string' },
-                  filename: { type: 'string' },
-                  path: { type: 'string' },
-                  mimetype: { type: 'string' },
-                  size: { type: 'number' },
-                  documentType: { type: 'string' },
-                  uploadedAt: { type: 'string', format: 'date-time' },
-                },
-              },
-            },
           },
         },
       },
@@ -50,3 +36,8 @@ const options = {
 };
 
 export const swaggerSpec = swaggerJsdoc(options);
+
+// Función para decidir si montar Swagger según el entorno
+export const shouldMountSwagger = () => {
+  return env.nodeEnv !== 'production';
+};
