@@ -1,9 +1,12 @@
 import { UserModel } from '../models/user.model.js';
 
 class UserRepository {
-  async getAll() {
-    // Por defecto no traigo el campo password (aunque todavía no lo tengo, es buena práctica)
-    return UserModel.find().select('-password');
+  async getAll(page = 1, limit = 20) {
+    const skip = (page - 1) * limit;
+    return UserModel.find()
+      .select('-password')
+      .skip(skip)
+      .limit(limit);
   }
 
   async getById(id) {
@@ -17,8 +20,7 @@ class UserRepository {
   async create(data) {
     return UserModel.create(data);
   }
-
-  // Lo uso en el seed de mocks
+  
   async createMany(docs) {
     return UserModel.insertMany(docs);
   }
@@ -30,15 +32,15 @@ class UserRepository {
   async deleteById(id) {
     return UserModel.findByIdAndDelete(id);
   }
-
-  // Agrego este método para pushear un documento al array del usuario
-async addDocument(userId, documentMetadata) {
-  return UserModel.findByIdAndUpdate(
-    userId,
-    { $push: { documents: documentMetadata } },
-    { new: true }
-  ).select('-password');
-}
+  
+  // Método para agregar documentos de archivos
+  async addDocument(userId, documentMetadata) {
+    return UserModel.findByIdAndUpdate(
+      userId,
+      { $push: { documents: documentMetadata } },
+      { new: true }
+    ).select('-password');
+  }
 }
 
 export default new UserRepository();

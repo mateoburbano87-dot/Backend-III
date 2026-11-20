@@ -4,8 +4,8 @@ import { NotFoundError, ValidationError, ConflictError } from '../errors/index.j
 import { ERROR_MESSAGES } from '../errors/errorDictionary.js';
 
 class UserService {
-  async getAllUsers() {
-    return userRepository.getAll();
+  async getAllUsers(page = 1, limit = 20) {
+    return userRepository.getAll(page, limit);
   }
 
   async getUserById(id) {
@@ -20,16 +20,13 @@ class UserService {
     if (!data.name || !data.email) {
       throw new ValidationError(ERROR_MESSAGES.USER_NAME_EMAIL_REQUIRED);
     }
-
     const existing = await userRepository.getByEmail(data.email);
     if (existing) {
       throw new ConflictError(ERROR_MESSAGES.USER_EMAIL_IN_USE);
     }
-
     if (!data.role) {
       data.role = USER_ROLES.USER;
     }
-
     return userRepository.create(data);
   }
 
